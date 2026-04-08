@@ -90,3 +90,18 @@ def view_tasks():
          print(f"[{status}] ID: {task['id']:2d} | Priority: {task['priority']} | "f"Date: {task['date']} | {task['description']}")
      
 
+def mark_task(task_id: int):
+     tasks = load()
+     if not tasks:
+          raise ValueError("Tasks list is empty")
+     
+     for task in tasks:
+        if task["id"] == task_id:
+            if task["done"]:
+                print(f"Task {task_id} is already marked as done.")
+            else:
+                task["done"] = True
+                save_tasks(tasks)
+            return
+     raise ValueError(f"Task not found")
+
