@@ -105,3 +105,52 @@ def mark_task(task_id: int):
             return
      raise ValueError(f"Task not found")
 
+def main():
+    if not os.path.exists(FILE):
+        open(FILE, 'w', encoding='utf-8').close()
+
+    while True:
+        print("\n" + "=" * 55)
+        print("          TASK MANAGEMENT")
+        print("=" * 55)
+        print("1. Add new task")
+        print("2. Delete task")
+        print("3. View all tasks")
+        print("4. Mark task as completed")
+        print("5. Exit")
+
+        choice = input("\nEnter your choice (1-5): ").strip()
+
+        try:
+            if choice == "1":
+                desc = input("Enter task description: ").strip()
+                prio = int(input("Enter priority (1-5): "))
+                date_str = input("Enter date (YYYY-MM-DD) or press Enter for today: ").strip()
+                date = date_str if date_str else None
+                task_id = add_task(desc, prio, date)
+                print(f"Task ID = {task_id}")
+
+            elif choice == "2":
+                tid = int(input("Enter task ID to delete: "))
+                delete_task(tid)
+                print(f"Task {tid} deleted.")
+
+            elif choice == "3":
+                view_tasks()
+
+            elif choice == "4":
+                tid = int(input("Enter task ID to mark as done: "))
+                mark_task(tid)
+
+            elif choice == "5":
+                print("Program ends")
+                break
+            else:
+                print("Invalid choice")
+        except ValueError as e:
+            print(f"Error: {e}")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+
+if __name__ == "__main__":
+    main()
