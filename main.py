@@ -5,11 +5,14 @@ FILE = 'tasks.txt'
 
 def load():
     tasks = []
+    if not os.path.exists(FILE):
+        return tasks
     with open(FILE, "r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
-                    parts = line.strip().split("|")
-                    if len(parts) == 5:
+                parts = line.strip().split("|")
+                if len(parts) == 5:
+                    try:
                         task_id = int(parts[0])
                         desc = parts[1]
                         date = parts[2]
@@ -22,6 +25,8 @@ def load():
                             "priority": priority,
                             "done": done
                         })
+                    except ValueError:
+                        continue
     return tasks
 
 def save_tasks(tasks):
