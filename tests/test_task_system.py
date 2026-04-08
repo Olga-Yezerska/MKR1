@@ -1,6 +1,8 @@
 import pytest
 import os
-from main import add_task, delete_task, mark_task, load, get_next_id, save_tasks, FILE
+from main import add_task, delete_task
+from main import mark_task, load, get_next_id, save_tasks, FILE
+
 
 @pytest.fixture
 def empty_file():
@@ -15,14 +17,18 @@ def sample_tasks():
     """Tasks file with sample data"""
     if os.path.exists(FILE):
         os.remove(FILE)
-    
+
     tasks = [
-        {"id": 1, "description": "Buy milk", "date": "2026-04-08", "priority": 2, "done": False},
-        {"id": 2, "description": "Clean room", "date": "2026-04-07", "priority": 1, "done": False},
-        {"id": 3, "description": "Finish report", "date": "2026-04-10", "priority": 3, "done": True},
+        {"id": 1, "description": "Buy milk", "date": "2026-04-08",
+         "priority": 2, "done": False},
+        {"id": 2, "description": "Clean room", "date": "2026-04-07",
+         "priority": 1, "done": False},
+        {"id": 3, "description": "Finish report", "date": "2026-04-10",
+         "priority": 3, "done": True},
     ]
     save_tasks(tasks)
     yield
+
 
 def test_get_next_id_empty():
     assert get_next_id([]) == 1
@@ -33,12 +39,11 @@ def test_get_next_id_with_tasks():
 
 
 def test_load_empty_file(empty_file):
-    tasks = load()
-    assert tasks == []
+    assert load() == []
 
 
 def test_add_task_success(empty_file):
-    task_id = add_task("Write tests", 2)
+    add_task("Write tests", 2)
     tasks = load()
     assert len(tasks) == 1
 

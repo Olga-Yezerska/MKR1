@@ -3,10 +3,12 @@ from datetime import datetime
 
 FILE = 'tasks.txt'
 
+
 def load():
     tasks = []
     if not os.path.exists(FILE):
         return tasks
+
     with open(FILE, "r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
@@ -29,25 +31,31 @@ def load():
                         continue
     return tasks
 
+
 def save_tasks(tasks):
-     with open(FILE, "w", encoding="utf-8") as f:
-          for task in tasks:
-               f.write(f"{task['id']}|{task['description']}|{task['date']}|"f"{task['priority']}|{task['done']}\n")
+    with open(FILE, "w", encoding="utf-8") as f:
+        for task in tasks:
+            f.write(
+                f"{task['id']}|{task['description']}|{task['date']}|"
+                f"{task['priority']}|{task['done']}\n"
+            )
+
 
 def get_next_id(tasks):
     if not tasks:
         return 1
     return max(task["id"] for task in tasks) + 1
 
+
 def add_task(description: str, priority: int, date=None):
     if not (1 <= priority <= 5):
         raise ValueError("Invalid priority")
     if not description or not description.strip():
         raise ValueError("Invalid description")
-    
+
     if date is None:
         date = datetime.now().strftime("%Y-%m-%d")
-        
+
     tasks = load()
     task_id = get_next_id(tasks)
 
@@ -62,45 +70,50 @@ def add_task(description: str, priority: int, date=None):
     save_tasks(tasks)
     return task_id
 
+
 def delete_task(task_id: int):
-     tasks = load()
-     if not tasks:
-          raise ValueError("Tasks list is empty")
-     
-     for i, task in enumerate(tasks):
+    tasks = load()
+    if not tasks:
+        raise ValueError("Tasks list is empty")
+
+    for i, task in enumerate(tasks):
         if task["id"] == task_id:
             del tasks[i]
             save_tasks(tasks)
             return
-     raise ValueError(f"Task not found")
+    raise ValueError("Task not found")
+
 
 def view_tasks():
-     tasks = load()
-     if not tasks:
-          print("Tasks list is empty.")
-          return
-     
-     print("\n=== Tasks List ===")
-     print("1. Sort by priority")
-     print("2. Sort by date")
-     choice = input("Select option for sort: ").strip()
-    
-     if choice == "1":
-         tasks.sort(key=lambda x: (x["priority"], x["date"]))
-     else:
-         tasks.sort(key=lambda x: (x["date"], x["priority"]))
-    
-     for task in tasks:
-         status = "Done" if task["done"] else "Not completed"
-         print(f"[{status}] ID: {task['id']:2d} | Priority: {task['priority']} | "f"Date: {task['date']} | {task['description']}")
-     
+    tasks = load()
+    if not tasks:
+        print("Tasks list is empty.")
+        return
+
+    print("\n=== Tasks List ===")
+    print("1. Sort by priority")
+    print("2. Sort by date")
+    choice = input("Select option for sort: ").strip()
+
+    if choice == "1":
+        tasks.sort(key=lambda x: (x["priority"], x["date"]))
+    else:
+        tasks.sort(key=lambda x: (x["date"], x["priority"]))
+
+    for task in tasks:
+        status = "Done" if task["done"] else "Not completed"
+        print(
+            f"[{status}] ID: {task['id']:2d} | Priority: {task['priority']} | "
+            f"Date: {task['date']} | {task['description']}"
+        )
+
 
 def mark_task(task_id: int):
-     tasks = load()
-     if not tasks:
-          raise ValueError("Tasks list is empty")
-     
-     for task in tasks:
+    tasks = load()
+    if not tasks:
+        raise ValueError("Tasks list is empty")
+
+    for task in tasks:
         if task["id"] == task_id:
             if task["done"]:
                 print(f"Task {task_id} is already marked as done.")
@@ -108,7 +121,8 @@ def mark_task(task_id: int):
                 task["done"] = True
                 save_tasks(tasks)
             return
-     raise ValueError(f"Task not found")
+    raise ValueError("Task not found")
+
 
 def main():
     if not os.path.exists(FILE):
@@ -130,7 +144,9 @@ def main():
             if choice == "1":
                 desc = input("Enter task description: ").strip()
                 prio = int(input("Enter priority (1-5): "))
-                date_str = input("Enter date (YYYY-MM-DD) or press Enter for today: ").strip()
+                date_str = input(
+                    "Enter date (YYYY-MM-DD) or press Enter for today: "
+                ).strip()
                 date = date_str if date_str else None
                 task_id = add_task(desc, prio, date)
                 print(f"Task ID = {task_id}")
@@ -156,6 +172,7 @@ def main():
             print(f"Error: {e}")
         except Exception as e:
             print(f"Unexpected error: {e}")
+
 
 if __name__ == "__main__":
     main()
