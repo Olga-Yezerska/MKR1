@@ -34,3 +34,26 @@ def get_next_id(tasks):
         return 1
     return max(task["id"] for task in tasks) + 1
 
+def add_task(description: str, priority: int, date=None):
+    if not (1 <= priority <= 5):
+        raise ValueError("Invalid priority")
+    if not description or not description.strip():
+        raise ValueError("Invalid description")
+    
+    if date is None:
+        date = datetime.now().strftime("%Y-%m-%d")
+        
+    tasks = load()
+    task_id = get_next_id(tasks)
+
+    tasks.append({
+        "id": task_id,
+        "description": description,
+        "date": date,
+        "priority": priority,
+        "done": False
+    })
+
+    save_tasks(tasks)
+    return task_id
+
