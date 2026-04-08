@@ -29,3 +29,8 @@ def save_tasks(tasks):
           for task in tasks:
                f.write(f"{task['id']}|{task['description']}|{task['date']}|"f"{task['priority']}|{task['done']}\n")
 
+def get_next_id(tasks):
+    if not tasks:
+        return 1
+    return max(task["id"] for task in tasks) + 1
+
