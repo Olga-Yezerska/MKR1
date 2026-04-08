@@ -57,3 +57,15 @@ def add_task(description: str, priority: int, date=None):
     save_tasks(tasks)
     return task_id
 
+def delete_task(task_id: int):
+     tasks = load()
+     if not tasks:
+          raise ValueError("Tasks list is empty")
+     
+     for i, task in enumerate(tasks):
+        if task["id"] == task_id:
+            del tasks[i]
+            save_tasks(tasks)
+            return
+     raise ValueError(f"Task not found")
+
