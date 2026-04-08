@@ -69,3 +69,24 @@ def delete_task(task_id: int):
             return
      raise ValueError(f"Task not found")
 
+def view_tasks():
+     tasks = load()
+     if not tasks:
+          print("Tasks list is empty.")
+          return
+     
+     print("\n=== Tasks List ===")
+     print("1. Sort by priority")
+     print("2. Sort by date")
+     choice = input("Select option for sort: ").strip()
+    
+     if choice == "1":
+         tasks.sort(key=lambda x: (x["priority"], x["date"]))
+     else:
+         tasks.sort(key=lambda x: (x["date"], x["priority"]))
+    
+     for task in tasks:
+         status = "Done" if task["done"] else "Not completed"
+         print(f"[{status}] ID: {task['id']:2d} | Priority: {task['priority']} | "f"Date: {task['date']} | {task['description']}")
+     
+
